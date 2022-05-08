@@ -1,9 +1,8 @@
 import {fireEvent, render, screen} from "@testing-library/react";
 import React from "react";
-import {GithubData, GithubLogin} from "../../types/GithubData";
 import Results from "./Results";
 
-
+/*
 const itemCount = 15;
 const term = 'andna';
 
@@ -70,3 +69,6 @@ describe('Results', () => {
         fireEvent.click(typeHeader)
     });
 })
+
+
+ */

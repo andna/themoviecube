@@ -1,13 +1,12 @@
 import {render, screen} from "@testing-library/react";
 import Box from "../../components/pages/Box";
 import React from "react";
-import {GithubData, GithubLogin} from "../../types/GithubData";
 import {Canvas} from "@react-three/fiber";
 import ReactThreeTestRenderer from "@react-three/test-renderer";
 
 const itemCount = 15;
 const term = 'andna';
-
+/*
 const items =  [...new Array(itemCount)].map((item, index) => {
     return {
         login: term + '-' + index,

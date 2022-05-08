@@ -1,24 +1,27 @@
 import * as React from "react";
-import {GithubLogin} from "../../types/GithubData";
 import {maximumPage} from "../../utils/services";
 import {Pagination} from "@mui/material";
 import ResultsTable from "../organisms/ResultsTable";
 import {stylesUtils} from "../../utils/styles";
 import Message from "../organisms/Message";
+import {Movie} from "../../types/MovieData";
 
 const { results: styles } = stylesUtils;
 
 type Props = {
     page: number,
-    loginItems: GithubLogin[],
+    loginItems: Movie[],
     chooseRotateTo: (index: number) => void,
     getPageInfo: (index: number) => void,
     pageQuantity: number,
     isLoading: boolean,
+    postersOnly: boolean,
+
 }
 
 
 const Results: React.FC<Props> = ( { page, pageQuantity, loginItems, chooseRotateTo,
+    postersOnly,
                                        getPageInfo,
                                         isLoading }) => {
 
@@ -32,7 +35,7 @@ const Results: React.FC<Props> = ( { page, pageQuantity, loginItems, chooseRotat
         {loginItems && loginItems.length > 0
             ?
             <>
-                <ResultsTable page={page} loginItems={loginItems}/>
+                <ResultsTable page={page} loginItems={loginItems} postersOnly={postersOnly}/>
                 {
                  page >= maximumPage &&
                    <Message type="limit" />
@@ -50,13 +53,16 @@ const Results: React.FC<Props> = ( { page, pageQuantity, loginItems, chooseRotat
             </div>
 
         }
-        <Pagination count={pageQuantity}
-                    color="primary"
-                    page={page}
-                    sx={styles.pagination}
-                    onChange={handleChange}
-                    hideNextButton={page >= maximumPage}
-        />
+        {!postersOnly &&
+            <Pagination count={pageQuantity}
+                        boundaryCount={2}
+                        page={page}
+                        sx={styles.pagination}
+                        onChange={handleChange}
+                        hideNextButton={page >= maximumPage}
+            />
+        }
+
     </>
 
 }

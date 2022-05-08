@@ -1,19 +1,12 @@
 import * as React from "react";
-import {GithubLogin} from "../../types/GithubData";
-import {maximumItems, perPageResults} from "../../utils/services";
-import {useEffect, useState} from "react";
+import {cubeSides, perPageResults} from "../../utils/services";
 import {
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Tooltip, TooltipProps
+    Tooltip, TooltipProps, Typography
 } from "@mui/material";
 import {styled} from "@mui/material/styles";
 import {stylesUtils} from "../../utils/styles";
+import {Movie} from "../../types/MovieData";
+import ImageFile from "../atoms/ImageFile";
 
 const { resultsTable: styles } = stylesUtils;
 
@@ -23,110 +16,53 @@ const CssTooltip = styled(({ className, ...props }: TooltipProps) => (
 
 type Props = {
     page: number,
-    loginItems: GithubLogin[],
+    loginItems: Movie[],
+    postersOnly: boolean
 }
 
 
-const ResultsTable: React.FC<Props> = ( { page, loginItems  }) => {
+const ResultsTable: React.FC<Props> = ( { page, loginItems, postersOnly  }) => {
 
-    const headers = [
-        { id: 'avatar',     label: ' ', },
-        { id: 'login',      tooltipText: 'The user\'s login name'},
-        { id: 'type',       tooltipText: 'User or Organization'},
-        { id: 'result_num', tooltipText: 'Order decided by Github considering the "best match" for your search.', label: 'Result #',},
-        { id: 'url',        label: ' '},
-    ]
+    let startSlice = Math.floor((0 + ((page - 1) * 4)) % (cubeSides * perPageResults));
+    let endSlice = startSlice + perPageResults;
 
-    const [activeSort, setActiveSort] = useState<string>(headers[1].id);
-    const [isDesc, setIsDesc] = useState<boolean>(true);
-    const [loginItemsSorted, setLoginItemsSorted] = useState<GithubLogin[]>(loginItems);
-    const [isAddedResultNum, setIsAddedResultNum] = useState<boolean>(false);
 
-    useEffect(()=> {
-            let sorted = loginItems;
-            if(!isAddedResultNum){
-                setIsAddedResultNum(true);
-                sorted.map((item, i) => {
-                    const result_num = (i + 1 + ((page  - 1 ) * perPageResults))
-                    item.hide_cause_of_api_limit = result_num > maximumItems;
-                    item.result_num = result_num;
-                    return item;
-                });
-            }
+    return <div style={styles.moviesWrapper}>
+        {loginItems.slice(startSlice, endSlice).map((item : Movie, index: number) => {
 
-            sorted = sorted.sort((a,b) => {
-            let returnSort = 0;
-            switch (activeSort){
-                case 'login':
-                    returnSort = isDesc ? a.login.localeCompare(b.login) : b.login.localeCompare(a.login)
-                    break;
-                case 'type':
-                    returnSort = isDesc ? a.type.localeCompare(b.type) : b.type.localeCompare(a.type)
-                    break;
-                case 'result_num':
-                    returnSort = isDesc ? a.result_num - b.result_num : b.result_num - a.result_num;
-                    break;
-            }
-            return returnSort;
-        })
-        setLoginItemsSorted(sorted)
-    }, [activeSort, isDesc])
 
-    const startSort = (id : string) => {
-        if (id === activeSort) {
-            setIsDesc(!isDesc);
-        } else {
-            setActiveSort(id);
-        }
-    }
+            const movieIndex = (index + 1 + ((page  - 1 ) * perPageResults));
+            const year = item.release_date && new Date(item.release_date).getFullYear();
+            let title: string | string[] = item.title.split(":");
+            const subtitle = title[1];
+            title = title[0] + (title[1] ? ":" : "");
 
-    return <TableContainer component={Paper}>
-                <Table sx={{ width: 360 }} aria-label="simple table">
-                    <TableHead>
-                        <TableRow>
-                            {headers.map(header => (
-                                <CssTooltip title={header.tooltipText || " "} key={header.id} placement="top"
-                                            sx={styles.tooltip}>
-                                    <TableCell
+            return <div style={{...styles.movieContainer, ...(postersOnly && styles.movieContainerBig)}}>
+                <div style={{...styles.movieContent, ...(postersOnly && styles.movieContentHidden)}}>
 
-                                        onClick={() => startSort(header.id)}
-                                        sx={{...styles.header,
-                                            ...(!header.tooltipText && styles.untouchable)}}>
-                                        {header.label || header.id}
-                                        <span style={styles.sorterArrow}> {header.id === activeSort && (isDesc ? '⬇' : '⬆')}</span>
-                                    </TableCell>
-                                </CssTooltip>
+                    <Typography variant="h6" sx={styles.title}>
+                        {title}
+                        {subtitle && <><br /><small>{subtitle}</small></>}
+                    </Typography>
+                    <div style={{...styles.bottomInfo}}>
 
-                            ))}
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {loginItemsSorted.map((user, i) => {
-                            return !user.hide_cause_of_api_limit &&
-                                <TableRow
-                                    key={user.login}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <TableCell sx={styles.cell}>
-                                        <img src={user.avatar_url} alt={user.login} style={styles.avatar}/>
-                                    </TableCell>
-                                    <TableCell sx={styles.cell}>
-                                        {user.login}
-                                    </TableCell>
-                                    <TableCell sx={styles.cell} align="center">
-                                        <small>{user.type.replace("Organization","Org")}</small>
-                                    </TableCell>
-                                    <TableCell align="center"  sx={{...styles.cell, ...styles.number}}>
-                                        <small><small> {user.result_num}</small></small>
-                                    </TableCell>
-                                    <TableCell sx={styles.cell} align="center">
-                                        <a href={user.html_url} target="_blank" rel="noreferrer" style={styles.a}>↗</a>
-                                    </TableCell>
-                                </TableRow>
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        <Typography variant="subtitle2" sx={styles.number}>
+                            #{movieIndex}
+                        </Typography>
+                        <Typography variant="caption" sx={styles.year}>
+                            {year}
+                        </Typography>
+                        <a href={`https://www.themoviedb.org/movie/${item.id}`}
+                           target="_blank" rel="noreferrer"  style={styles.link}>
+                            🔗
+                        </a>
+                    </div>
+                </div>
+                <ImageFile item={item} />
+            </div>
+        })}
+
+    </div>
 
 }
 export default ResultsTable;

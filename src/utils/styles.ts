@@ -4,12 +4,33 @@ const flexEnd = 'flex-end' as 'flex-end'
 const relative = 'relative' as 'relative'
 const none = 'none' as 'none'
 const absolute = 'absolute' as 'absolute'
+const fixed = 'fixed' as 'fixed'
 const borderBox = 'border-box' as 'border-box'
 const center = 'center' as 'center'
 const capitalize = 'capitalize' as 'capitalize'
+const pageWidth = 574
+
+const exo = [
+    'Exo',
+    '-apple-system',
+    'BlinkMacSystemFont',
+    '"Segoe UI"',
+    'Roboto',
+    '"Helvetica Neue"',
+    'Arial',
+    'sans-serif',
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
+    '"Segoe UI Symbol"',
+].join(',')
 
 export const stylesUtils = {
     app: {
+        theme:{
+            typography: {
+                fontFamily: exo,
+            },
+        },
         canvas : {
             background: 'transparent',
             height: '100vh',
@@ -35,11 +56,10 @@ export const stylesUtils = {
     },
     box: {
         container: {display: 'flex',
-            width: 400,
-            height: 400,
+            width: pageWidth,
+            height: pageWidth,
             alignItems: flexEnd,
-            marginLeft: 40,
-            marginBottom: 24,
+            marginBottom: 10,
             position: relative,
             userSelect: none,
         },
@@ -55,30 +75,140 @@ export const stylesUtils = {
     },
     results: {
         pagination:{
+            display: 'flex',
+            justifyContent: center,
             fontWeight: 600,
             marginTop: 3,
             "& .Mui-disabled" : {
                 opacity: '0 !important'
             },
+            "& .Mui-selected" : {
+                background: 'white !important',
+                color: 'black !important'
+            },
+            "& .MuiPaginationItem-text":{
+                fontFamily: exo,
+                color: 'white'
+            },
             "& .MuiPaginationItem-text:not(.Mui-selected):not(.MuiPaginationItem-previousNext):not(:hover)":{
-               opacity: 0.3
-            }
+                opacity: 0.2
+            },
         },
         manual:{
             textAlign: center
         },
     },
+    collage:{
+        container:{
+            padding: 20,
+            color: 'white'
+        },
+        onlyPostersSwitch:{
+            display: 'flex',
+            alignItems: center
+        },
+        disabled: {
+            opacity: 0.2
+        }
+    },
     resultsTable: {
+        moviesWrapper:{
+            /*display: 'flex',
+            flexDirection: 'column' as 'column',
+            flexWrap: 'wrap' as  'wrap',
+            height: 400*/
+        },
+        movieContainer:{
+            display: 'inline-block',
+            position: relative,
+            height:  pageWidth / 2 - 32,
+            minWidth: pageWidth / 2,
+            maxWidth:  pageWidth / 2,
+            marginBottom: -10,
+            overflow: 'hidden',
+            transition: '0.2s'
+        },
+        movieContainerBig:{
+            height:  pageWidth / 2,
+        },
+        number: {
+            fontFamily: exo,
+        },
+        title: {
+            fontFamily: exo,
+            background: 'radial-gradient(rgba(50,50,50, 0.8), transparent 90%)',
+            borderRadius: 2,
+            fontWeight: 800,
+            lineHeight: '1.5rem',
+            padding: '0 20px'
+        },
+        year: {
+            fontFamily: exo,
+        },
+        link:{
+          textDecoration: none,
+          opacity: 0.5,
+          '&:hover':{
+              opacity: 1
+          }
+        },
+        bottomInfo:{
+          width: '100%',
+          display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: center
+        },
+        reverseRow:{
+            flexDirection: 'row-reverse' as 'row-reverse'
+        },
+        movieContent:{
+            display: 'flex',
+            justifyContent: 'end',
+            flexDirection: 'column' as 'column',
+            alignItems: center,
+            textAlign: center,
+            height: '100%',
+            color: 'white',
+            textShadow: '0 0 3px black',
+            padding: 20,
+            boxSizing: 'border-box' as 'border-box',
+            fontWeight: 800,
+            transition: '0.2s'
+        },
+        movieContentHidden:{
+            opacity: 0
+        },
+        poster:{
+            filter: 'grayscale(0.3) sepia(0.1) contrast(0.7)',
+            objectFit: 'cover' as 'cover',
+            height: '100%',
+            width: '100%',
+            boxSizing: 'border-box' as 'border-box',
+            pointerEvents: none,
+            position: absolute,
+            zIndex: -1,
+            left:0,
+            top:0,
+            "&:hover":{
+                position: absolute,
+                right: 0,
+                bottom: 60,
+                zIndex: 1,
+                transition: '0.2s',
+                width: 360,
+                height: 220,
+            }
+        },
+        altImage: {
+            transform: 'scale(0.5)',
+            transformOrigin: '50% 5px'
+        },
         cell: {
             padding: '0 8px 0 0',
             fontWeight: 600,
             maxWidth: 120,
             overflow: 'hidden',
             textOverflow: 'ellipsis'
-        },
-        number:{
-            fontFamily: 'monospace',
-            fontWeight: 300
         },
         header: {
             textTransform: capitalize,
@@ -112,6 +242,12 @@ export const stylesUtils = {
         }
     },
     search: {
+        examples:{
+            padding: 20,
+          display: 'grid',
+            gridTemplateColumns: 'repeat(4, 100px)',
+          gridGap: '15px',
+        },
         field: {
             width: '100%',
             fontSize: '25px',
@@ -119,10 +255,11 @@ export const stylesUtils = {
         button: {
             width: '100%',
             fontSize: '25px',
-            fontWeight: 600,
+            fontWeight: 800,
             padding: '20px 0',
             borderRadius: 6,
-            margin: '40px 0 90px'
+            margin: '40px 0 90px',
+            fontFamily: exo,
         },
         customTextField: {
             width: '100%',
@@ -142,6 +279,17 @@ export const stylesUtils = {
         realTitle:{
             fontWeight: 600,
         },
+        nextButton:{
+            color: 'white',
+            position: fixed,
+            zIndex: 1000000,
+            bottom: '50vh',
+            right: 100,
+        },
+        nextButtonMobile:{
+            bottom: '5vh',
+            right: 'calc(50% - 50px)'
+        },
         titleContainer: {
             display: 'flex',
             alignItems: 'center',
@@ -151,7 +299,7 @@ export const stylesUtils = {
             color: 'white'
         },
         titleContainerMobile: {
-            position: absolute,
+            position: fixed,
             top: '2em',
             left: '1em'
         },

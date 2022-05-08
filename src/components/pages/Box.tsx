@@ -3,7 +3,6 @@ import * as THREE from 'three'
 import {useEffect, useRef, useState} from "react";
 import {Euler, useFrame, Vector3} from "@react-three/fiber";
 import {Html} from "@react-three/drei";
-import {GithubData} from "../../types/GithubData";
 import Results from "../templates/Results";
 import Search from "../templates/Search";
 
@@ -13,21 +12,26 @@ import {
     cubePositions,
     cubeSides,
     formatColorToObj, getInfoFromGithubApi, lerp,
-    maximumPage,
-    setRot
+    maximumPage, perPageResults,
+    setRot, superSlow
 } from "../../utils/services";
 import {stylesUtils} from "../../utils/styles";
 import Message from "../organisms/Message";
+import {MovieResultsData} from "../../types/MovieData";
+import Collage from "../templates/Collage";
 
 
 const { box: styles } = stylesUtils;
 
 
 type Props = {
-    tableData: GithubData,
+    tableData: MovieResultsData,
     handleSubmit: (searchTerm?: string) => {},
     needsReset: () => void,
+    setPostersOnly: (setPO: boolean) => void,
     isLoading: boolean,
+    postersOnly: boolean,
+    navigateNextCube: boolean,
     pagesQuantiy: number,
     foundTerm: string,
     errorMessage: string,
@@ -42,7 +46,10 @@ const Box: React.FC<Props> = ({ pagesQuantiy,
                                 needsReset,
                                 foundTerm,
                                 errorMessage,
-                                setErrorMessage
+                                setErrorMessage,
+                                postersOnly,
+                                setPostersOnly,
+                                navigateNextCube
                               }) => {
 
     const refBox = useRef<THREE.Mesh<THREE.BufferGeometry, THREE.Material | THREE.Material[]>>(null);
@@ -61,6 +68,7 @@ const Box: React.FC<Props> = ({ pagesQuantiy,
 
     const [searchTerm, setSearchTerm] = useState<string>("")
     const [pageOffset, setPageOffset] = useState<number>(0)
+    const [forceReset, setForceReset] = useState<boolean>(false)
 
     const [isPageLoading, setIsPageLoading] = useState<number>(-1)
 
@@ -68,8 +76,8 @@ const Box: React.FC<Props> = ({ pagesQuantiy,
 
     useEffect(() => {
         if(refBox && refBox.current) {
-            refBox.current.rotation.x = -0.1
-            refBox.current.rotation.y = 0.2
+            refBox.current.rotation.x =  -cubePositions[0].rotTo.y;
+            refBox.current.rotation.y =  -cubePositions[0].rotTo.y;
         }
     }, []);
 
@@ -79,6 +87,9 @@ const Box: React.FC<Props> = ({ pagesQuantiy,
             let currentSpeed = autoRotationSpeed;
 
             if(isLoading){
+                if(!forceReset) {
+                    setForceReset(true);
+                }
                 currentSpeed = Math.min(autoRotationSpeed, loadingAutoRotationSpeedLoading);
                 if(autoRotationSpeed < loadingAutoRotationSpeedLoading){
                     setAutoRotationSpeed((number) => number += 0.01)
@@ -88,17 +99,27 @@ const Box: React.FC<Props> = ({ pagesQuantiy,
                     setAutoRotationSpeed(initialAutoRotationSpeedInitial);
                     currentSpeed = initialAutoRotationSpeedInitial;
                 } else if (!rotateTo) {
-                    setAutoRotationSpeed(0);
-                    currentSpeed = 0;
-                    refBox.current.rotation.y = -aux;
-                    refBox.current.rotation.x = -aux;
+                    if(forceReset){
+                        setForceReset(false);
+                        refBox.current.rotation.y = cubePositions[0].rotTo.y;
+                        refBox.current.rotation.x = cubePositions[0].rotTo.x;
+                    }
+                    setAutoRotationSpeed(superSlow);
+                    currentSpeed = superSlow;
+                }
+            }
+            if(rotateTo){
+                if(forceReset) {
+                    setRot(rotateTo, refBox && refBox.current)
+                    //when setRot finishes:
+                   // setForceReset(false);
+                } else {
+                    setAutoRotationSpeed(superSlow);
+                    currentSpeed = superSlow;
                 }
             }
             if(currentSpeed > 0){
                 refBox.current.rotation.y -= currentSpeed;
-            }
-            if(rotateTo){
-               setRot(rotateTo, refBox && refBox.current)
             }
 
             const time = t.clock.elapsedTime;
@@ -127,65 +148,78 @@ const Box: React.FC<Props> = ({ pagesQuantiy,
     })
 
     useEffect(() => {
-        if(tableData && tableData.items){
-            setLoginArray([tableData.items])
+        if(tableData && tableData.results){
+            setLoginArray([tableData.results])
             setPageOffset(0)
         }
     }, [tableData])
 
-    const addItemsToLoginArray = (items : GithubData[], index: number) => {
+    const addItemsToLoginArray = (items : MovieResultsData[], index: number) => {
         setLoginArray(oldArray => {
             const newArray = oldArray;
             newArray[index] = items;
+            console.log(newArray)
             return newArray;
         });
     }
 
     const chooseRotateTo = (page: number) => {
-        let pageToRot = page - pageOffset;
+        if(page < pagesQuantiy){
+            let pageToRot = page - pageOffset;
 
-        if(pageToRot >= cubeSides || pageToRot < 0){
-            let newOffset = Math.floor(page / cubeSides ) * cubeSides;
-            setPageOffset(newOffset)
-            pageToRot = page - newOffset;
+            if(pageToRot >= cubeSides || pageToRot < 0){
+                let newOffset = Math.floor(page / cubeSides ) * cubeSides;
+                setPageOffset(newOffset)
+                pageToRot = page - newOffset;
+            }
+
+            if(!loginArray[page]){
+                getPageInfo(page )
+            }
+
+            setForceReset(true);
+            setRotateTo(cubePositions[pageToRot].rotTo)
+
+            needsReset()
         }
 
-        if(!loginArray[page]){
-            getPageInfo(page )
-        }
-
-        setRotateTo(cubePositions[pageToRot].rotTo)
-
-        needsReset()
     }
 
 
     const getPageInfo = async (page: number) => {
-        getInfoFromGithubApi(searchTerm, page + 1,
-            (isLoad)=>{setIsPageLoading(isLoad ? page : -1)},
-            () => {},
-            (json, foundError) => {
-                if(foundError){
-                    setErrorMessage(json.message);
-                } else {
-                    setErrorMessage(null)
-                    addItemsToLoginArray(json?.items, page);
-                }
-                setIsPageLoading(-1)
-            },
-            (error) => {
-                setErrorMessage(error.message);
-            },
-        )
+        const setOf20 = Math.ceil((page + 1) / cubeSides)
+        const setOf20ForArray = setOf20 - 1;
+        if(!loginArray[setOf20ForArray]) {
+            getInfoFromGithubApi(searchTerm, setOf20,
+                (isLoad)=>{setIsPageLoading(isLoad ? page : -1)},
+                () => {},
+                (json, foundError) => {
+                    if(foundError){
+                        setErrorMessage(json.message);
+                    } else {
+                        setErrorMessage(null)
+                        addItemsToLoginArray(json?.results, setOf20ForArray);
+                    }
+                    setIsPageLoading(-1)
+                },
+                (error) => {
+                    setErrorMessage(error.message);
+                },
+            )
+        }
     }
+
+    useEffect(() => {
+        chooseRotateTo(cubeSides * Math.ceil((pageOffset + 1) / cubeSides ));
+    }, [navigateNextCube ])
 
     return <><mesh
                 position={[0,0,0]}
                 ref={refBox}>
                 <boxGeometry args={[1,1,1]} />
-                <meshStandardMaterial color={color} metalness={0.3} roughness={0.5} opacity={1} />
+                <meshStandardMaterial color={'#444444'} metalness={0.3} roughness={0.5} opacity={1} />
                 {cubePositions.map((position, index) => (
-                        <Html key={`face-${index}`} distanceFactor={1} transform occlude={true} center
+                        <Html key={`face-${index}`} distanceFactor={0.7} transform occlude={true} center
                           position={cubePositions[index].pos as Vector3}
                           rotation={cubePositions[index].rot as Euler}  >
 
@@ -194,16 +228,30 @@ const Box: React.FC<Props> = ({ pagesQuantiy,
                                 <Message type="error" errorMessage={errorMessage}/>}
                                 {foundTerm ?
                                     <>
-                                        {pagesQuantiy > (index + pageOffset) &&
-                                            (index + pageOffset) < maximumPage &&
-                                        <div style={styles.results}>
-                                            <Results page={index + 1 + pageOffset}
-                                                     isLoading={isPageLoading === (index + pageOffset)}
-                                                     pageQuantity={pagesQuantiy}
-                                                     getPageInfo={getPageInfo}
-                                                     loginItems={loginArray[index + pageOffset]}
-                                                     chooseRotateTo={chooseRotateTo}/>
-                                        </div>
+                                        {(index === cubeSides || (pagesQuantiy > (index + pageOffset) &&
+                                            (index + pageOffset) < maximumPage)) &&
+                                            <>
+                                                {index === cubeSides ?
+                                                    <Collage
+                                                        postersOnly={postersOnly}
+                                                        setPostersOnly={setPostersOnly}
+                                                        pageOffset={pageOffset}
+                                                        items={loginArray[Math.ceil((pageOffset) / cubeSides)]} />
+                                                :
+                                                    <div style={styles.results}>
+                                                        <Results page={index + 1 + pageOffset}
+                                                                 isLoading={isPageLoading === (index + pageOffset)}
+                                                                 pageQuantity={pagesQuantiy}
+                                                                 getPageInfo={getPageInfo}
+                                                                 postersOnly={postersOnly}
+                                                                 loginItems={loginArray[
+                                                                     Math.ceil((pageOffset) / cubeSides)
+                                                                     ]}
+                                                                 chooseRotateTo={chooseRotateTo}/>
+                                                    </div>
+                                                }
+                                            </>
+
                                         }
                                     </>
                                     :
@@ -213,6 +261,7 @@ const Box: React.FC<Props> = ({ pagesQuantiy,
                                                 setRotateTo={setRotateTo}
                                                 searchTerm={searchTerm}/>
                                     </div>
+
                                 }
                             </div>
                     </Html>

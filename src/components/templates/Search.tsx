@@ -17,10 +17,10 @@ type Props = {
 
 const Search: React.FC<Props> = ( { searchTerm, handleSubmit, setSearchTerm, setRotateTo  }) => {
 
-    const submitSearch = (event : any) => {
+    const submitSearch = (event : any, term: string = searchTerm) => {
         event.preventDefault();
         setRotateTo(null);
-        handleSubmit(searchTerm);
+        handleSubmit(term);
     }
 
     return <div>
@@ -38,6 +38,20 @@ const Search: React.FC<Props> = ( { searchTerm, handleSubmit, setSearchTerm, set
                 Submit
             </Button>
         </form>
+        Examples:
+        <div style={styles.examples}>
+            {['Lord', 'Harry', 'Mad', 'Alien'].map(button => {
+                return <Button color="primary" variant="outlined" type="submit" disableElevation
+                    onClick={(event)=>{
+                            setSearchTerm(button);
+                            submitSearch(event, button);
+                        }
+                    }
+                >
+                    {button}
+                </Button>
+            })}
+        </div>
     </div>
 
 }

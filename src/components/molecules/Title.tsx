@@ -1,5 +1,6 @@
 import * as React from "react";
 import {
+    Button,
     Chip,
     Typography
 } from "@mui/material";
@@ -13,16 +14,21 @@ type Props = {
     closeResults: () => {},
     totalCount: number,
     foundTerm: string,
-    isMobile: boolean
+    isMobile: boolean,
+    postersOnly: boolean,
+    navigateNextCube: () => void
 }
+
 
 const title = 'Github Login Search'
 
-const Title: React.FC<Props> = ( { closeResults, totalCount, foundTerm, isMobile  }) => {
+const Title: React.FC<Props> = ( { closeResults, totalCount, foundTerm, isMobile, postersOnly, navigateNextCube  }) => {
 
     const logo = <img src={logoImg} alt={title} style={styles.logo}/>
 
-    return <div style={{...styles.titleContainer, ...(isMobile && styles.titleContainerMobile)}}>
+    return <>
+
+        <div style={{...styles.titleContainer, ...(isMobile && styles.titleContainerMobile)}}>
         {foundTerm && totalCount >= 0 ?
             <div style={isMobile ? styles.titleTextContainerMobile : {display: 'block'}}>
                 {logo}
@@ -42,13 +48,23 @@ const Title: React.FC<Props> = ( { closeResults, totalCount, foundTerm, isMobile
                 <Typography sx={{...styles.realTitle, ...(isMobile && styles.titleTextContainerMobile)}}
                             variant={isMobile ? 'h6' : 'h2'}>
                     {logo}
-                    Github
-                    Login
-                    Search
+                    Movie Search Cube
                 </Typography>
             </div>
         }
     </div>
+
+        {postersOnly &&
+
+        <Button variant="outlined"
+                color="inherit"
+                onClick={navigateNextCube}
+                sx={{...styles.nextButton, ...(isMobile && styles.nextButtonMobile)}}>
+            Next cube
+        </Button>
+        }
+
+    </>
 
 }
 export default Title;

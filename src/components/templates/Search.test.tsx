@@ -1,8 +1,8 @@
 import {fireEvent, render, screen} from "@testing-library/react";
 import React from "react";
-import {GithubData, GithubLogin} from "../../types/GithubData";
 import Search from "./Search";
 
+/*
 const term = 'andna';
 
 const voided = () => {
@@ -38,3 +38,4 @@ describe('Search', () => {
         expect(form).toBeInTheDocument();
     });
 })
+*/

@@ -5,13 +5,18 @@ import {useRef, useState, Suspense} from "react";
 import {OrbitControls} from "@react-three/drei";
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import Box from "../components/pages/Box";
-import {GithubData} from "../types/GithubData";
 import useMediaQuery from "../hooks/useMediaQuery";
 import {perPageResults, getInfoFromGithubApi} from "../utils/services";
 import Title from "../components/molecules/Title";
 import {stylesUtils } from "../utils/styles";
+import {MovieResultsData} from "../types/MovieData";
+import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
 
 const { app: styles } = stylesUtils;
+
+
+
+const theme = createTheme(styles.theme);
 
 const App: React.FC = ( ) => {
 
@@ -20,11 +25,13 @@ const App: React.FC = ( ) => {
 
 
     const [isLoading, setIsLoading] = useState<boolean>(false)
+    const [navigateNextCube, setNavigateNextCube] = useState<boolean>(false)
     const [errorMessage, setErrorMessage] = useState<string>(null)
 
     const [pagesQuantity, setPagesQuantity] = useState<number>(0)
     const [foundTerm, setFoundTerm] = useState<string>("")
-    const [tableData, setTableData] = useState<GithubData>(null)
+    const [tableData, setTableData] = useState<MovieResultsData>(null)
+    const [postersOnly, setPostersOnly] = useState<boolean>(false)
 
     const getInfo = async (searchTerm: string, page: number = 1) => {
         getInfoFromGithubApi(searchTerm, page,
@@ -43,7 +50,7 @@ const App: React.FC = ( ) => {
             )
     }
 
-    const fakeDelayOffAutoRotation = ( data: GithubData, searchTerm: string, errorMessage: string = null) => {
+    const fakeDelayOffAutoRotation = ( data: MovieResultsData, searchTerm: string, errorMessage: string = null) => {
         setTimeout(() => {
             setIsLoading(false);
             if(errorMessage){
@@ -53,7 +60,7 @@ const App: React.FC = ( ) => {
                 setErrorMessage(errorMessage)
             }else{
                 reset()
-                setPagesQuantity(Math.ceil(data.total_count / perPageResults) )
+                setPagesQuantity(Math.ceil(data.total_results / perPageResults) )
                 setTableData(data)
                 setFoundTerm(searchTerm);
                 setErrorMessage(null)
@@ -67,12 +74,17 @@ const App: React.FC = ( ) => {
         }
     }
 
-    return (   <div style={{...styles.grid,
+    return (
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <div style={{...styles.grid,
             ...(isMobile ? styles.gridPortrait : styles.gridLandscape)}}>
 
             <Title closeResults={() => getInfo(null)}
-                   totalCount={tableData?.total_count}
+                   totalCount={tableData?.total_results}
                    isMobile={isMobile}
+                   navigateNextCube={() => {setNavigateNextCube(!navigateNextCube)}}
+                   postersOnly={postersOnly}
                    foundTerm={foundTerm} />
             <Canvas style={styles.canvas}
                           camera={{ fov: isMobile ? 4.2 : 3, position: [0, 0, 30] }}>
@@ -85,6 +97,9 @@ const App: React.FC = ( ) => {
                                    foundTerm={foundTerm}
                                    errorMessage={errorMessage}
                                    setErrorMessage={setErrorMessage}
+                                   postersOnly={postersOnly}
+                                   navigateNextCube={navigateNextCube}
+                                   setPostersOnly={setPostersOnly}
                                    isLoading={isLoading}/>
                           </Suspense>
                           <OrbitControls
@@ -95,12 +110,13 @@ const App: React.FC = ( ) => {
             <div id="only-for-test-purposes" style={{display: 'none'}}>
                 <span onClick={()=>getInfo('andna')}
                       data-testid="getInfo">g</span>
-                <span onClick={()=>fakeDelayOffAutoRotation({total_count: 10, items: []},
+                <span onClick={()=>fakeDelayOffAutoRotation({total_results: 10, results: [], page: 1, total_pages: 1},
                     'andna', null)}
                       data-testid="fakeAutoRotation">f</span>
                 <span onClick={()=>reset()} data-testid="reset">r</span>
             </div>
       </div>
+        </ThemeProvider>
   )
 }
 export default App;
