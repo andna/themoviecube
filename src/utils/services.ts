@@ -92,7 +92,7 @@ export const getInfoFromGithubApi = async (searchTerm: string,
         setIsLoading(true);
         let foundError = false;
         await fetch(
-            `https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_API_KEY}&query=${searchTerm}&page=${page}`)
+            `https://api.themoviedb.org/3/search/movie?api_key=5a7968a876a411752c75c56adddaf01a&query=${searchTerm}&page=${page}`)
             .then(response => {
                 foundError = response.status === 403;
                 return response.json();
