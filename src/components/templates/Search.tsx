@@ -23,25 +23,25 @@ const Search: React.FC<Props> = ( { searchTerm, handleSubmit, setSearchTerm, set
         handleSubmit(term);
     }
 
-    return <div>
+    return <div style={styles.searchContainer}>
         <form data-testid="search-form" onSubmit={submitSearch}>
             <CssTextField   variant="filled"
                             type="search"
-                            inputProps={{ 'aria-label': `${searchTerm ? 'User login to search' : 'Type a user login'}` }}
-                            label={`${searchTerm ? 'User login to search' : 'Type a user login'}`}
+                            inputProps={{ 'aria-label': `${searchTerm ? 'Movie title' : 'Type a movie title'}` }}
+                            label={`${searchTerm ? 'Movie title' : 'Type a movie title'}`}
                             value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                            sx={styles.field}/>
-            <Button color="primary" variant="contained" type="submit" disableElevation
+                            onChange={(e) => setSearchTerm(e.target.value)}/>
+            <Button color="secondary" variant="contained" type="submit" disableElevation
                     sx={styles.button}
                     disabled={!searchTerm || searchTerm === ''}>
-                Submit
+                Search
             </Button>
         </form>
-        Examples:
+        Or try:
         <div style={styles.examples}>
             {['Lord', 'Harry', 'Mad', 'Alien'].map(button => {
                 return <Button key={button}
+                               sx={styles.exampleButton}
                     color="primary" variant="outlined" type="submit" disableElevation
                     onClick={(event)=>{
                             setSearchTerm(button);

@@ -1,4 +1,4 @@
-import {cubePositions, formatColorToObj, getInfoFromGithubApi, lerp, setRot} from "./services";
+import {cubePositions, formatColorToObj, getInfoFromMovieDBApi, lerp, setRot} from "./services";
 
 test('color should reformat', ()=> {
     expect(formatColorToObj("rgb(0,0,0)")).toStrictEqual({r:0,g:0,b:0})
@@ -30,7 +30,7 @@ describe('setRot',  () => {
 
 
 test('resolve getInfoFromGithubApi', async ()=> {
-    await expect(getInfoFromGithubApi('andna', 1,
+    await expect(getInfoFromMovieDBApi('andna', 1,
         ()=>{},
         ()=>{},
         ()=>{},

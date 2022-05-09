@@ -1,7 +1,7 @@
 import * as React from "react";
 import {useState} from "react";
 import {Movie} from "../../types/MovieData";
-import {links} from "../../utils/services";
+import {cubeSides, links, perPageResults} from "../../utils/services";
 import {stylesUtils} from "../../utils/styles";
 import {Button, Switch, Typography} from "@mui/material";
 import ImageFile from "../atoms/ImageFile";
@@ -22,7 +22,7 @@ const Collage: React.FC<Props> = ( { items, pageOffset, postersOnly, setPostersO
             <div style={styles.smallImagesContainer}>
                 {[  [-2, 1, -1],
                     [4,  5,  2],
-                    [-1, 3, -1],
+                    [-1, 3, -3],
                 ].map((row, rowIndex) => (
                     <div key={rowIndex}
                          style={{...styles.collageRow, ...(rowIndex === 1 && styles.middleRow)}}>
@@ -30,7 +30,7 @@ const Collage: React.FC<Props> = ( { items, pageOffset, postersOnly, setPostersO
                             let currentPage = <ResultsTable page={pageIndex + pageOffset}
                                               loginItems={items} postersOnly={postersOnly} isCollage/>
                             switch (pageIndex) {
-                                case -2:
+                                case -2: //switch
                                     currentPage =  <div style={styles.onlyPostersSwitch}
                                         onClick={() => setPostersOnly(!postersOnly)}
                                     >
@@ -46,12 +46,25 @@ const Collage: React.FC<Props> = ( { items, pageOffset, postersOnly, setPostersO
                                         </Typography>
                                     </div>;
                                     break;
-                                case -1:
+                                case -1: //empty
                                     currentPage = <div></div>;
+                                    break;
+                                case -3: //pageData
+
+                                    const iniPage = pageOffset + 1;
+                                    const endPage = iniPage + Math.ceil(items.length / cubeSides);
+                                    currentPage = <>
+                                        {postersOnly && (endPage - iniPage > 1) &&
+                                        <div style={styles.pageData}>
+                                        Showing Pages
+                                            <br/>
+                                            {iniPage} to {endPage}
+                                        </div>}
+                                    </>;
                                     break;
                                 default:
                                     currentPage = <div style={styles.transforms[pageIndex]}>
-                                        <div style={styles.wing}></div>
+                                        {items.length >= (cubeSides * perPageResults) && <div style={styles.wing}></div>}
                                         {currentPage}
                                     </div>;
                                     break;

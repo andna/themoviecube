@@ -6,15 +6,13 @@ import {OrbitControls} from "@react-three/drei";
 import { OrbitControls as OrbitControlsImpl } from 'three-stdlib';
 import Box from "../components/pages/Box";
 import useMediaQuery from "../hooks/useMediaQuery";
-import {perPageResults, getInfoFromGithubApi} from "../utils/services";
+import {perPageResults, getInfoFromMovieDBApi} from "../utils/services";
 import Title from "../components/molecules/Title";
-import {stylesUtils } from "../utils/styles";
+import {exo, stylesUtils} from "../utils/styles";
 import {MovieResultsData} from "../types/MovieData";
-import {createTheme, CssBaseline, ThemeProvider} from "@mui/material";
+import {createTheme, CssBaseline, ThemeProvider,} from "@mui/material";
 
 const { app: styles } = stylesUtils;
-
-
 
 const theme = createTheme(styles.theme);
 
@@ -34,7 +32,7 @@ const App: React.FC = ( ) => {
     const [postersOnly, setPostersOnly] = useState<boolean>(false)
 
     const getInfo = async (searchTerm: string, page: number = 1) => {
-        getInfoFromGithubApi(searchTerm, page,
+        getInfoFromMovieDBApi(searchTerm, page,
             setIsLoading,
             () => {
                 setIsLoading(false);
@@ -84,7 +82,7 @@ const App: React.FC = ( ) => {
                    totalCount={tableData?.total_results}
                    isMobile={isMobile}
                    navigateNextCube={() => {setNavigateNextCube(!navigateNextCube)}}
-                   postersOnly={postersOnly}
+                   postersOnly={postersOnly && tableData?.total_results > 0}
                    foundTerm={foundTerm} />
             <Canvas style={styles.canvas}
                           camera={{ fov: isMobile ? 4.2 : 3, position: [0, 0, 30] }}>

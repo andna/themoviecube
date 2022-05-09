@@ -3,7 +3,6 @@ import {maximumPage} from "../../utils/services";
 import {Pagination} from "@mui/material";
 import ResultsTable from "../organisms/ResultsTable";
 import {stylesUtils} from "../../utils/styles";
-import Message from "../organisms/Message";
 import {Movie} from "../../types/MovieData";
 
 const { results: styles } = stylesUtils;
@@ -36,26 +35,17 @@ const Results: React.FC<Props> = ( { page, pageQuantity, loginItems, chooseRotat
             ?
             <>
                 <ResultsTable page={page} loginItems={loginItems} postersOnly={postersOnly}/>
-                {
-                 page >= maximumPage &&
-                   <Message type="limit" />
-                }
+
             </>
             :
             <div style={styles.manual}>
-                {isLoading ?
-                    <Message type="loading" />
-                    :
-                    <Message type="need_load"
-                             extraInfo={page}
-                             doAction={() => getPageInfo(page - 1)}/>
-                }
+                Loading...
             </div>
 
         }
         {!postersOnly &&
             <Pagination count={pageQuantity}
-                        boundaryCount={2}
+                        siblingCount={2}
                         page={page}
                         sx={styles.pagination}
                         onChange={handleChange}

@@ -20,7 +20,7 @@ type Props = {
 }
 
 
-const title = 'Github Login Search'
+const title = 'The Movie Cube'
 
 const Title: React.FC<Props> = ( { closeResults, totalCount, foundTerm, isMobile, postersOnly, navigateNextCube  }) => {
 
@@ -48,7 +48,8 @@ const Title: React.FC<Props> = ( { closeResults, totalCount, foundTerm, isMobile
                 <Typography sx={{...styles.realTitle, ...(isMobile && styles.titleTextContainerMobile)}}
                             variant={isMobile ? 'h6' : 'h2'}>
                     {logo}
-                    Movie Search Cube
+                    {' '}
+                    {title}
                 </Typography>
             </div>
         }

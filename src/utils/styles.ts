@@ -1,4 +1,5 @@
 import {colors} from "../components/atoms/colors";
+import {ThemeOptions} from "@mui/material";
 
 const flexEnd = 'flex-end' as 'flex-end'
 const relative = 'relative' as 'relative'
@@ -7,8 +8,7 @@ const absolute = 'absolute' as 'absolute'
 const fixed = 'fixed' as 'fixed'
 const borderBox = 'border-box' as 'border-box'
 const center = 'center' as 'center'
-const capitalize = 'capitalize' as 'capitalize'
-const rowReverse =  'row-reverse' as 'row-reverse'
+const right = 'right' as 'right'
 const cover = 'cover' as 'cover'
 const wrap = 'wrap' as 'wrap'
 const column = 'column' as 'column'
@@ -21,7 +21,7 @@ const displayFlexCentered = {
 }
 const collagePerspective = 'perspective(105px) rotateX(170deg)'
 
-const exo = [
+export const exo = [
     'Exo',
     '-apple-system',
     'BlinkMacSystemFont',
@@ -37,11 +37,31 @@ const exo = [
 
 export const stylesUtils = {
     app: {
-        theme:{
+        theme: {
             typography: {
                 fontFamily: exo,
             },
-        },
+            palette: {
+                primary: {
+                    main: '#000000',
+                    contrastText: '#ff0303',
+                },
+                secondary: {
+                    main: '#000000',
+                    contrastText: '#ff0303',
+                },
+                text: {
+                    primary: colors.white,
+                    secondary: colors.white,
+                },
+            },
+            components:{
+                MuiButton: {
+                    color: colors.white
+                }
+
+            },
+        } as ThemeOptions,
         canvas : {
             background: 'transparent',
             height: '100vh',
@@ -49,9 +69,6 @@ export const stylesUtils = {
             ':active':{
                 cursor: 'grabbing'
             }
-        },
-        searchTerm: {
-            position: 'fixed',
         },
         grid: {
             display: 'grid',
@@ -70,6 +87,7 @@ export const stylesUtils = {
             width: pageWidth,
             height: pageWidth,
             alignItems: flexEnd,
+            justifyContent: center,
             marginBottom: 10,
             position: relative,
             userSelect: none,
@@ -77,7 +95,7 @@ export const stylesUtils = {
         form: {
             position: absolute,
             left: 0,
-            paddingRight: 40,
+            padding: 40,
             width: `100%`,
             transition: '0.3s',
             boxSizing: borderBox,
@@ -106,7 +124,8 @@ export const stylesUtils = {
             },
         },
         manual:{
-            textAlign: center
+            textAlign: center,
+            margin: '50px 0'
         },
     },
     collage:{
@@ -116,11 +135,6 @@ export const stylesUtils = {
             height: '98%',
             color: 'white',
             ...displayFlexCentered,
-        },
-        smallImages:{
-            height: 100,
-            width: 100,
-            position: relative
         },
         smallImagesContainer:{
         },
@@ -150,6 +164,11 @@ export const stylesUtils = {
             opacity: 0.2,
             fontFamily: exo,
         },
+        pageData:{
+            ...displayFlexCentered,
+            textAlign: right,
+            paddingLeft: 20
+        },
         transforms:[
             {}, //null
             {transform: `${collagePerspective}`}, //page1
@@ -170,12 +189,6 @@ export const stylesUtils = {
         }
     },
     resultsTable: {
-        moviesWrapper:{
-            /*display: 'flex',
-            flexDirection: 'column' as 'column',
-            flexWrap: 'wrap' as  'wrap',
-            height: 400*/
-        },
         movieContainer:{
             display: 'inline-block',
             position: relative,
@@ -206,10 +219,6 @@ export const stylesUtils = {
             padding: 0.5,
             borderRadius: 4,
             boxSizing: borderBox
-        },
-
-        reverseRow:{
-            flexDirection: rowReverse
         },
         movieContent:{
             display: 'flex',
@@ -243,35 +252,6 @@ export const stylesUtils = {
         altImage: {
             transform: 'scale(0.5)',
         },
-        cell: {
-            padding: '0 8px 0 0',
-            fontWeight: 600,
-            maxWidth: 120,
-            overflow: 'hidden',
-            textOverflow: 'ellipsis'
-        },
-        sorterArrow:{
-            fontSize: '16px',
-            paddingLeft: 1
-        },
-        avatar: {
-            width: 25,
-            height: 25,
-            borderRadius: 4,
-            top: 2,
-            position: relative,
-            marginLeft: 5
-        },
-        a: {
-            textDecoration: 'none'
-        },
-        tooltip: {
-            zIndex: 100000000,
-            maxWidth: '200px'
-        },
-        untouchable: {
-            pointerEvents: none
-        }
     },
     movieContent:{
         title: {
@@ -303,24 +283,42 @@ export const stylesUtils = {
         },
     },
     search: {
-        examples:{
-            padding: 20,
-          display: 'grid',
-            gridTemplateColumns: 'repeat(4, 100px)',
-          gridGap: '15px',
+        searchContainer:{
+          padding: 20
         },
-        field: {
-            width: '100%',
-            fontSize: '25px',
+        examples:{
+            paddingTop: 20,
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, calc(50% - 7px)',
+            gridGap: 15,
         },
         button: {
             width: '100%',
             fontSize: '25px',
             fontWeight: 800,
             padding: '20px 0',
-            borderRadius: 6,
-            margin: '40px 0 90px',
+            borderRadius: 3,
+            margin: '40px 0 40px',
             fontFamily: exo,
+            color: '#444',
+            background: '#ccc',
+            '&:hover':{
+                background: '#fff'
+            },
+            "&.Mui-disabled" : {
+                background: '#585858'
+
+            },
+        },
+        exampleButton:{
+            color: 'white',
+            fontFamily: exo,
+            fontSize: '25px',
+            borderColor: '#848484',
+            '&:hover':{
+                borderColor: 'white',
+                backgroundColor: 'rgba(255,255,255, 0.3)'
+            },
         },
         customTextField: {
             width: '100%',
@@ -328,12 +326,28 @@ export const stylesUtils = {
                 fontSize: 3,
             },
             '& .MuiInputBase-root': {
-                borderRadius: '10px 10px 0 0'
+                borderRadius: 10,
+                height: 100,
+                overflow: 'hidden'
+            },
+            '& .MuiInputLabel-root': {
+                color: '#c1c1c1',
+                fontFamily: exo,
+            },
+            '& .MuiInputLabel-shrink': {
+                color: '#c1c1c1'
+            },
+            '& .MuiInputLabel-shrink.Mui-focused': {
+                color: '#6381e2'
             },
             '& .MuiInputBase-input': {
                 fontSize: '30px !important',
                 fontWeight: 600,
+                color: 'white'
             },
+            '& .MuiFilledInput-root:before': {
+                display: none
+            }
         }
     },
     title: {

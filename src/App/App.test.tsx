@@ -8,7 +8,7 @@ window.ResizeObserver = ResizeObserver;
 
 test('renders title', () => {
   render(<App />);
-  const linkElement = screen.getByText(/Github Login Search/i);
+  const linkElement = screen.getByText(/The Movie Cube/i);
   expect(linkElement).toBeInTheDocument();
 });
 it('test functions', async () => {

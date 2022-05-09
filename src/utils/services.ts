@@ -4,16 +4,6 @@ export const links =
     {
         altImage:
             'https://www.themoviedb.org/assets/2/v4/glyphicons/basic/glyphicons-basic-38-picture-grey-c2ebdbb057f2a7614185931650f8cee23fa137b93812ccb132b9df511df1cfac.svg',
-        limit1000:
-            'https://docs.github.com/en/rest/search' +
-            '#:~:text=to%20satisfy%20that%20need%2C%20the%20github%20search%20api%20provides%20up%20' +
-            'to%201%2C000%20results%20for%20each%20search.',
-        limitPerMinute:
-            'https://docs.github.com/en/rest/search' +
-            '#:~:text=the%20search%20api%20has%20a%20custom%20rate%20limit.%20for%20requests%20using' +
-            '%20basic%20authentication%2C%20oauth%2C%20or%20client%20id%20and%20secret%2C%20you%20can%20' +
-            'make%20up%20to%2030%20requests%20per%20minute.%20for%20unauthenticated%20requests%2C%20the%20' +
-            'rate%20limit%20allows%20you%20to%20make%20up%20to%2010%20requests%20per%20minute.'
     }
 
     export const superSlow = 0.0007;
@@ -81,12 +71,12 @@ export const lerp = (value1: number, value2: number, amount: number) => {
     return value1 + (value2 - value1) * amount;
 }
 
-export const getInfoFromGithubApi = async (searchTerm: string,
-                       page: number = 1,
-                       setIsLoading: (isLoading : boolean) => void,
-                       doIfSearchNull: () => void,
-                       doIfFoundJson: (json: any, foundError: boolean) => void,
-                       doIfCatchError: (error: any) => void
+export const getInfoFromMovieDBApi = async (searchTerm: string,
+                                            page: number = 1,
+                                            setIsLoading: (isLoading : boolean) => void,
+                                            doIfSearchNull: () => void,
+                                            doIfFoundJson: (json: any, foundError: boolean) => void,
+                                            doIfCatchError: (error: any) => void
                        ) => {
     if(searchTerm){
         setIsLoading(true);

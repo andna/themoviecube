@@ -11,12 +11,11 @@ import {
     colorsArr,
     cubePositions,
     cubeSides,
-    formatColorToObj, getInfoFromGithubApi, lerp,
+    formatColorToObj, getInfoFromMovieDBApi, lerp,
     maximumPage, perPageResults,
     setRot, superSlow
 } from "../../utils/services";
 import {stylesUtils} from "../../utils/styles";
-import Message from "../organisms/Message";
 import {MovieResultsData} from "../../types/MovieData";
 import Collage from "../templates/Collage";
 
@@ -194,7 +193,7 @@ const Box: React.FC<Props> = ({ pagesQuantiy,
         const setOf20 = Math.ceil((page + 1) / cubeSides)
         const setOf20ForArray = setOf20 - 1;
         if(!loginArray[setOf20ForArray]) {
-            getInfoFromGithubApi(searchTerm, setOf20,
+            getInfoFromMovieDBApi(searchTerm, setOf20,
                 (isLoad)=>{setIsPageLoading(isLoad ? page : -1)},
                 () => {},
                 (json, foundError) => {
@@ -228,8 +227,6 @@ const Box: React.FC<Props> = ({ pagesQuantiy,
                           rotation={cubePositions[index].rot as Euler}  >
 
                             <div style={styles.container}>
-                                {errorMessage && (foundTerm ? !(loginArray && loginArray[index + pageOffset]) : true) &&
-                                <Message type="error" errorMessage={errorMessage}/>}
                                 {foundTerm ?
                                     <>
                                         {(index === cubeSides || (pagesQuantiy > (index + pageOffset) &&
