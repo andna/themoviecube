@@ -8,7 +8,18 @@ const fixed = 'fixed' as 'fixed'
 const borderBox = 'border-box' as 'border-box'
 const center = 'center' as 'center'
 const capitalize = 'capitalize' as 'capitalize'
+const rowReverse =  'row-reverse' as 'row-reverse'
+const cover = 'cover' as 'cover'
+const wrap = 'wrap' as 'wrap'
+const column = 'column' as 'column'
 const pageWidth = 574
+const collagePoster = 80
+const displayFlexCentered = {
+    display: 'flex',
+    justifyContent: center,
+    alignItems: center
+}
+const collagePerspective = 'perspective(105px) rotateX(170deg)'
 
 const exo = [
     'Exo',
@@ -35,7 +46,7 @@ export const stylesUtils = {
             background: 'transparent',
             height: '100vh',
             cursor: 'grab',
-            '&:active':{
+            ':active':{
                 cursor: 'grabbing'
             }
         },
@@ -75,10 +86,10 @@ export const stylesUtils = {
     },
     results: {
         pagination:{
-            display: 'flex',
-            justifyContent: center,
+            ...displayFlexCentered,
             fontWeight: 600,
-            marginTop: 3,
+            marginTop: 2,
+            marginBottom: 2,
             "& .Mui-disabled" : {
                 opacity: '0 !important'
             },
@@ -101,14 +112,61 @@ export const stylesUtils = {
     collage:{
         container:{
             padding: 20,
-            color: 'white'
+            width: '100%',
+            height: '98%',
+            color: 'white',
+            ...displayFlexCentered,
+        },
+        smallImages:{
+            height: 100,
+            width: 100,
+            position: relative
+        },
+        smallImagesContainer:{
+        },
+        collageRow:{
+            ...displayFlexCentered,
+            width: '100%',
+        },
+        middleRow:{
+            margin: '-22px 0'
+        },
+        centerPage:{
+          margin: '0 -20px'
+        },
+        collagePage:{
+          display: 'flex',
+          height: collagePoster * 2,
+          width: collagePoster * 2,
+            flexWrap: wrap,
         },
         onlyPostersSwitch:{
-            display: 'flex',
-            alignItems: center
+
+        },
+        switchText:{
+            fontFamily: exo,
         },
         disabled: {
-            opacity: 0.2
+            opacity: 0.2,
+            fontFamily: exo,
+        },
+        transforms:[
+            {}, //null
+            {transform: `${collagePerspective}`}, //page1
+            {transform: `rotate(90deg) ${collagePerspective}`}, //page2
+            {transform: 'scaleX(-1) perspective(105px) rotateX(12deg)',}, //page3
+            {transform: `rotate(-90deg) ${collagePerspective}`}, //page4
+            {transform: 'scaleY(-0.88) scaleX(0.88)',}, //page5
+        ],
+        wing: {
+            position: absolute,
+            width: '100%',
+            height: 1,
+            bottom: -33,
+            borderRight: `${collagePoster}px solid transparent`,
+            borderLeft: `${collagePoster}px solid transparent`,
+            borderTop: '35px solid rgba(100,100,100,0.3)'
+
         }
     },
     resultsTable: {
@@ -131,47 +189,39 @@ export const stylesUtils = {
         movieContainerBig:{
             height:  pageWidth / 2,
         },
-        number: {
+        movieContainerSmall:{
+            height: collagePoster,
+            width: collagePoster,
+            minWidth: collagePoster,
+            border: '1px solid #888',
+            boxSizing: borderBox
+        },
+        numberCollage:{
+            position: absolute,
+            top: 'calc(50% - 10px)',
+            left: 'calc(50% - 10px)',
+            background: 'rgba(0,0,0,.5)',
             fontFamily: exo,
+            transform: 'scaleX(-1) rotate(180deg)',
+            padding: 0.5,
+            borderRadius: 4,
+            boxSizing: borderBox
         },
-        title: {
-            fontFamily: exo,
-            background: 'radial-gradient(rgba(50,50,50, 0.8), transparent 90%)',
-            borderRadius: 2,
-            fontWeight: 800,
-            lineHeight: '1.5rem',
-            padding: '0 20px'
-        },
-        year: {
-            fontFamily: exo,
-        },
-        link:{
-          textDecoration: none,
-          opacity: 0.5,
-          '&:hover':{
-              opacity: 1
-          }
-        },
-        bottomInfo:{
-          width: '100%',
-          display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: center
-        },
+
         reverseRow:{
-            flexDirection: 'row-reverse' as 'row-reverse'
+            flexDirection: rowReverse
         },
         movieContent:{
             display: 'flex',
             justifyContent: 'end',
-            flexDirection: 'column' as 'column',
+            flexDirection: column,
             alignItems: center,
             textAlign: center,
             height: '100%',
             color: 'white',
             textShadow: '0 0 3px black',
             padding: 20,
-            boxSizing: 'border-box' as 'border-box',
+            boxSizing: borderBox,
             fontWeight: 800,
             transition: '0.2s'
         },
@@ -180,28 +230,18 @@ export const stylesUtils = {
         },
         poster:{
             filter: 'grayscale(0.3) sepia(0.1) contrast(0.7)',
-            objectFit: 'cover' as 'cover',
+            objectFit: cover,
             height: '100%',
             width: '100%',
-            boxSizing: 'border-box' as 'border-box',
+            boxSizing: borderBox,
             pointerEvents: none,
             position: absolute,
             zIndex: -1,
             left:0,
             top:0,
-            "&:hover":{
-                position: absolute,
-                right: 0,
-                bottom: 60,
-                zIndex: 1,
-                transition: '0.2s',
-                width: 360,
-                height: 220,
-            }
         },
         altImage: {
             transform: 'scale(0.5)',
-            transformOrigin: '50% 5px'
         },
         cell: {
             padding: '0 8px 0 0',
@@ -209,14 +249,6 @@ export const stylesUtils = {
             maxWidth: 120,
             overflow: 'hidden',
             textOverflow: 'ellipsis'
-        },
-        header: {
-            textTransform: capitalize,
-            cursor: 'pointer',
-            padding: 0.5,
-            "&:hover":{
-                color: 'skyblue'
-            }
         },
         sorterArrow:{
             fontSize: '16px',
@@ -240,6 +272,35 @@ export const stylesUtils = {
         untouchable: {
             pointerEvents: none
         }
+    },
+    movieContent:{
+        title: {
+            fontFamily: exo,
+            background: 'radial-gradient(rgba(50,50,50, 0.8), transparent 90%)',
+            borderRadius: 2,
+            fontWeight: 800,
+            lineHeight: '1.5rem',
+            padding: '0 20px'
+        },
+        year: {
+            fontFamily: exo,
+        },
+        link:{
+            textDecoration: none,
+            opacity: 0.5,
+        },
+        linkHovered:{
+            opacity: 1
+        },
+        bottomInfo:{
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: center
+        },
+        number: {
+            fontFamily: exo,
+        },
     },
     search: {
         examples:{
@@ -282,7 +343,7 @@ export const stylesUtils = {
         nextButton:{
             color: 'white',
             position: fixed,
-            zIndex: 1000000,
+            zIndex: 100000000,
             bottom: '50vh',
             right: 100,
         },

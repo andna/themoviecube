@@ -41,7 +41,8 @@ const Search: React.FC<Props> = ( { searchTerm, handleSubmit, setSearchTerm, set
         Examples:
         <div style={styles.examples}>
             {['Lord', 'Harry', 'Mad', 'Alien'].map(button => {
-                return <Button color="primary" variant="outlined" type="submit" disableElevation
+                return <Button key={button}
+                    color="primary" variant="outlined" type="submit" disableElevation
                     onClick={(event)=>{
                             setSearchTerm(button);
                             submitSearch(event, button);

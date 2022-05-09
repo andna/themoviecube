@@ -54,7 +54,7 @@ const Title: React.FC<Props> = ( { closeResults, totalCount, foundTerm, isMobile
         }
     </div>
 
-        {postersOnly &&
+        {postersOnly && foundTerm &&
 
         <Button variant="outlined"
                 color="inherit"

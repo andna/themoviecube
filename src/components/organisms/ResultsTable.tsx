@@ -7,62 +7,46 @@ import {styled} from "@mui/material/styles";
 import {stylesUtils} from "../../utils/styles";
 import {Movie} from "../../types/MovieData";
 import ImageFile from "../atoms/ImageFile";
+import MovieContent from "../molecules/MovieContent";
 
 const { resultsTable: styles } = stylesUtils;
-
-const CssTooltip = styled(({ className, ...props }: TooltipProps) => (
-    <Tooltip {...props} classes={{ popper: className }} />
-))(({ theme }) => ({ }));
 
 type Props = {
     page: number,
     loginItems: Movie[],
-    postersOnly: boolean
+    postersOnly: boolean,
+    isCollage?: boolean,
 }
 
 
-const ResultsTable: React.FC<Props> = ( { page, loginItems, postersOnly  }) => {
+const ResultsTable: React.FC<Props> = ( { page, loginItems, postersOnly, isCollage= false  }) => {
 
     let startSlice = Math.floor((0 + ((page - 1) * 4)) % (cubeSides * perPageResults));
     let endSlice = startSlice + perPageResults;
 
 
-    return <div style={styles.moviesWrapper}>
-        {loginItems.slice(startSlice, endSlice).map((item : Movie, index: number) => {
+    return <>
+        {loginItems && loginItems.slice(startSlice, endSlice).map((item : Movie, index: number) => {
 
 
             const movieIndex = (index + 1 + ((page  - 1 ) * perPageResults));
-            const year = item.release_date && new Date(item.release_date).getFullYear();
-            let title: string | string[] = item.title.split(":");
-            const subtitle = title[1];
-            title = title[0] + (title[1] ? ":" : "");
 
-            return <div style={{...styles.movieContainer, ...(postersOnly && styles.movieContainerBig)}}>
-                <div style={{...styles.movieContent, ...(postersOnly && styles.movieContentHidden)}}>
 
-                    <Typography variant="h6" sx={styles.title}>
-                        {title}
-                        {subtitle && <><br /><small>{subtitle}</small></>}
-                    </Typography>
-                    <div style={{...styles.bottomInfo}}>
-
-                        <Typography variant="subtitle2" sx={styles.number}>
-                            #{movieIndex}
-                        </Typography>
-                        <Typography variant="caption" sx={styles.year}>
-                            {year}
-                        </Typography>
-                        <a href={`https://www.themoviedb.org/movie/${item.id}`}
-                           target="_blank" rel="noreferrer"  style={styles.link}>
-                            🔗
-                        </a>
-                    </div>
+            return <div key={item.title + index + page} style={{...styles.movieContainer,
+                ...(postersOnly && styles.movieContainerBig),
+                ...(isCollage && styles.movieContainerSmall)}}>
+                <div style={{...styles.movieContent,
+                    ...((postersOnly || isCollage) && styles.movieContentHidden)}}>
+                    <MovieContent item={item} movieIndex={movieIndex} />
                 </div>
+                {postersOnly && isCollage && <Typography variant="subtitle2" sx={styles.numberCollage}>
+                    #{movieIndex}
+                </Typography>}
                 <ImageFile item={item} />
             </div>
         })}
 
-    </div>
+    </>
 
 }
 export default ResultsTable;

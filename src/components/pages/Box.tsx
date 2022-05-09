@@ -60,6 +60,7 @@ const Box: React.FC<Props> = ({ pagesQuantiy,
     const [autoRotationSpeed, setAutoRotationSpeed] = useState<number>(initialAutoRotationSpeedInitial)
     const [rotateTo, setRotateTo] = useState<THREE.Mesh["rotation"]>()
     const [angle, setAngle] = useState<number>(1.5)
+    const [timer, setTimer] = useState<ReturnType<typeof setTimeout>>(null)
 
     const [colorCurrentIndex, setColorCurrentIndex ] = useState<number>(0)
     const [colorChangerCounter, setColorChangerCounter ] = useState<number>(0)
@@ -112,7 +113,10 @@ const Box: React.FC<Props> = ({ pagesQuantiy,
                 if(forceReset) {
                     setRot(rotateTo, refBox && refBox.current)
                     //when setRot finishes:
-                   // setForceReset(false);
+                    clearTimeout(timer);
+                    setTimer(setTimeout(() => {
+                        setForceReset(false);
+                    }, 2000));
                 } else {
                     setAutoRotationSpeed(superSlow);
                     currentSpeed = superSlow;
