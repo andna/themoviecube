@@ -78,12 +78,7 @@ const App: React.FC = ( ) => {
             <div style={{...styles.grid,
             ...(isMobile ? styles.gridPortrait : styles.gridLandscape)}}>
 
-            <Title closeResults={() => getInfo(null)}
-                   totalCount={tableData?.total_results}
-                   isMobile={isMobile}
-                   navigateNextCube={() => {setNavigateNextCube(!navigateNextCube)}}
-                   postersOnly={postersOnly && tableData?.total_results > 0}
-                   foundTerm={foundTerm} />
+            <div></div>
             <Canvas style={styles.canvas}
                           camera={{ fov: isMobile ? 4.2 : 3, position: [0, 0, 30] }}>
                           <ambientLight intensity={0.7} />

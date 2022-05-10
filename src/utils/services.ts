@@ -11,7 +11,7 @@ export const cubeSides = 5;
 export const perPageResults = 4;
 export const maximumItems = 1000;
 export const maximumPage = 10001; //Math.floor(maximumItems/perPageResults) + 1;
-const pos = { half: 0.505, init: 0};
+const pos = { half: 0.52, init: 0};
 const halfPi = Math.PI / 2;
 
 
@@ -27,6 +27,7 @@ export const cubePositions = [
     { pos: [0, pos.half, -pos.init],    rot: [halfPi*3, 0, 0],  rotTo: {x: halfPi - aux, y: 0, z: aux} as THREE.Euler },
 ];
  */
+
 
 export const cubePositions = [
     { pos: [0, pos.init, pos.half],     rot: [0,0,0],           rotTo: {x: aux, y: -aux, z: 0} as THREE.Euler},

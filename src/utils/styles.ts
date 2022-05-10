@@ -64,7 +64,7 @@ export const stylesUtils = {
         } as ThemeOptions,
         canvas : {
             background: 'transparent',
-            height: '100vh',
+            height: '100%',
             cursor: 'grab',
             ':active':{
                 cursor: 'grabbing'

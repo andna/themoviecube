@@ -222,7 +222,7 @@ const Box: React.FC<Props> = ({ pagesQuantiy,
                 <boxGeometry args={[1,1,1]} />
                 <meshStandardMaterial color={'#444444'} metalness={0.3} roughness={0.5} opacity={1} />
                 {cubePositions.map((position, index) => (
-                        <Html key={`face-${index}`} distanceFactor={0.7} transform occlude={true} center
+                        <Html key={`face-${index}`} distanceFactor={1.2} transform occlude={true} center
                           position={cubePositions[index].pos as Vector3}
                           rotation={cubePositions[index].rot as Euler}  >
 
