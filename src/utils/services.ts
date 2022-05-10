@@ -11,7 +11,7 @@ export const cubeSides = 5;
 export const perPageResults = 4;
 export const maximumItems = 1000;
 export const maximumPage = 10001; //Math.floor(maximumItems/perPageResults) + 1;
-const pos = { half: 0.52, init: 0};
+const pos = { half: 0.505, init: 0};
 const halfPi = Math.PI / 2;
 
 

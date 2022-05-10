@@ -12,8 +12,8 @@ const right = 'right' as 'right'
 const cover = 'cover' as 'cover'
 const wrap = 'wrap' as 'wrap'
 const column = 'column' as 'column'
-const pageWidth = 574
-const collagePoster = 80
+const pageWidth = 446
+const collagePoster = 62
 const displayFlexCentered = {
     display: 'flex',
     justifyContent: center,
@@ -64,7 +64,6 @@ export const stylesUtils = {
         } as ThemeOptions,
         canvas : {
             background: 'transparent',
-            height: '100%',
             cursor: 'grab',
             ':active':{
                 cursor: 'grabbing'
@@ -143,10 +142,10 @@ export const stylesUtils = {
             width: '100%',
         },
         middleRow:{
-            margin: '-22px 0'
+            margin: '-14px 0'
         },
         centerPage:{
-          margin: '0 -20px'
+          margin: '0 -12px'
         },
         collagePage:{
           display: 'flex',
@@ -175,16 +174,16 @@ export const stylesUtils = {
             {transform: `rotate(90deg) ${collagePerspective}`}, //page2
             {transform: 'scaleX(-1) perspective(105px) rotateX(12deg)',}, //page3
             {transform: `rotate(-90deg) ${collagePerspective}`}, //page4
-            {transform: 'scaleY(-0.88) scaleX(0.88)',}, //page5
+            {transform: 'scaleY(-0.92) scaleX(0.92) translateY(1px)',}, //page5
         ],
         wing: {
             position: absolute,
             width: '100%',
             height: 1,
-            bottom: -33,
+            bottom: -27,
             borderRight: `${collagePoster}px solid transparent`,
             borderLeft: `${collagePoster}px solid transparent`,
-            borderTop: '35px solid rgba(100,100,100,0.3)'
+            borderTop: '30px solid rgba(100,100,100,0.3)'
 
         }
     },
@@ -259,8 +258,9 @@ export const stylesUtils = {
             background: 'radial-gradient(rgba(50,50,50, 0.8), transparent 90%)',
             borderRadius: 2,
             fontWeight: 800,
-            lineHeight: '1.5rem',
-            padding: '0 20px'
+            lineHeight: '1.2rem',
+            padding: '0 10px',
+            fontSize: '1rem'
         },
         year: {
             fontFamily: exo,
@@ -284,21 +284,21 @@ export const stylesUtils = {
     },
     search: {
         searchContainer:{
-          padding: 20
+
         },
         examples:{
-            paddingTop: 20,
+            paddingTop: 10,
             display: 'grid',
             gridTemplateColumns: 'repeat(2, calc(50% - 7px)',
-            gridGap: 15,
+            gridGap: 10,
         },
         button: {
             width: '100%',
-            fontSize: '25px',
+            fontSize: '20px',
             fontWeight: 800,
             padding: '20px 0',
             borderRadius: 3,
-            margin: '40px 0 40px',
+            margin: '27px 0',
             fontFamily: exo,
             color: '#444',
             background: '#ccc',
@@ -313,7 +313,7 @@ export const stylesUtils = {
         exampleButton:{
             color: 'white',
             fontFamily: exo,
-            fontSize: '25px',
+            fontSize: '20px',
             borderColor: '#848484',
             '&:hover':{
                 borderColor: 'white',
@@ -327,7 +327,7 @@ export const stylesUtils = {
             },
             '& .MuiInputBase-root': {
                 borderRadius: 10,
-                height: 100,
+                height: 85,
                 overflow: 'hidden'
             },
             '& .MuiInputLabel-root': {
@@ -341,7 +341,7 @@ export const stylesUtils = {
                 color: '#6381e2'
             },
             '& .MuiInputBase-input': {
-                fontSize: '30px !important',
+                fontSize: '25px !important',
                 fontWeight: 600,
                 color: 'white'
             },
