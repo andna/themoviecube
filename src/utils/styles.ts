@@ -116,7 +116,9 @@ export const stylesUtils = {
             },
             "& .MuiPaginationItem-text":{
                 fontFamily: exo,
-                color: 'white'
+                color: 'white',
+                fontSize: 11,
+                padding: 0.5
             },
             "& .MuiPaginationItem-text:not(.Mui-selected):not(.MuiPaginationItem-previousNext):not(:hover)":{
                 opacity: 0.2
@@ -289,7 +291,7 @@ export const stylesUtils = {
         examples:{
             paddingTop: 10,
             display: 'grid',
-            gridTemplateColumns: 'repeat(2, calc(50% - 7px)',
+            gridTemplateColumns: 'repeat(2, calc(50% - 5px)',
             gridGap: 10,
         },
         button: {
